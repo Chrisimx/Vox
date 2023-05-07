@@ -35,8 +35,7 @@ struct input_stream_context {
 size_t inputStreamRead(void * ctx, void * output, size_t read_size) {
     struct input_stream_context* is = (struct input_stream_context*)ctx;
 
-    jint avail_size = is->env->CallIntMethod(reinterpret_cast<jobject>(is->env),
-                                             reinterpret_cast<jmethodID>(is->input_stream), is->mid_available);
+    jint avail_size = (*is->env)->CallIntMethod(is->env, is->input_stream, is->mid_available);
     jint size_to_copy = read_size < avail_size ? (jint)read_size : avail_size;
 
     jbyteArray byte_array = (*is->env)->NewByteArray(is->env, size_to_copy);
@@ -67,7 +66,7 @@ void inputStreamClose(void * ctx) {
 
 }
 
-extern "C" JNIEXPORT jlong JNICALL
+JNIEXPORT jlong JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_initContextFromInputStream(
         JNIEnv *env, jobject thiz, jobject input_stream) {
     UNUSED(thiz);
@@ -131,7 +130,7 @@ static struct whisper_context *whisper_init_from_asset(
     return whisper_init(&loader);
 }
 
-extern "C" JNIEXPORT jlong JNICALL
+JNIEXPORT jlong JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_initContextFromAsset(
         JNIEnv *env, jobject thiz, jobject assetManager, jstring asset_path_str) {
     UNUSED(thiz);
@@ -142,7 +141,7 @@ Java_org_fireamp_vox_WhisperLib_00024Companion_initContextFromAsset(
     return (jlong) context;
 }
 
-extern "C" JNIEXPORT jlong JNICALL
+JNIEXPORT jlong JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_initContext(
         JNIEnv *env, jobject thiz, jstring model_path_str) {
     UNUSED(thiz);
@@ -153,7 +152,7 @@ Java_org_fireamp_vox_WhisperLib_00024Companion_initContext(
     return (jlong) context;
 }
 
-extern "C" JNIEXPORT void JNICALL
+JNIEXPORT void JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_freeContext(
         JNIEnv *env, jobject thiz, jlong context_ptr) {
     UNUSED(env);
@@ -162,7 +161,7 @@ Java_org_fireamp_vox_WhisperLib_00024Companion_freeContext(
     whisper_free(context);
 }
 
-extern "C" JNIEXPORT void JNICALL
+JNIEXPORT void JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_fullTranscribe(
         JNIEnv *env, jobject thiz, jlong context_ptr, jfloatArray audio_data) {
     UNUSED(thiz);
@@ -198,7 +197,7 @@ Java_org_fireamp_vox_WhisperLib_00024Companion_fullTranscribe(
     (*env)->ReleaseFloatArrayElements(env, audio_data, audio_data_arr, JNI_ABORT);
 }
 
-extern "C" JNIEXPORT jint JNICALL
+JNIEXPORT jint JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_getTextSegmentCount(
         JNIEnv *env, jobject thiz, jlong context_ptr) {
     UNUSED(env);
@@ -207,7 +206,7 @@ Java_org_fireamp_vox_WhisperLib_00024Companion_getTextSegmentCount(
     return whisper_full_n_segments(context);
 }
 
-extern "C" JNIEXPORT jstring JNICALL
+JNIEXPORT jstring JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_getTextSegment(
         JNIEnv *env, jobject thiz, jlong context_ptr, jint index) {
     UNUSED(thiz);
@@ -217,7 +216,7 @@ Java_org_fireamp_vox_WhisperLib_00024Companion_getTextSegment(
     return string;
 }
 
-extern "C" JNIEXPORT jstring JNICALL
+JNIEXPORT jstring JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_getSystemInfo(
         JNIEnv *env, jobject thiz
 ) {
@@ -227,7 +226,7 @@ Java_org_fireamp_vox_WhisperLib_00024Companion_getSystemInfo(
     return string;
 }
 
-extern "C" JNIEXPORT jstring JNICALL
+JNIEXPORT jstring JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_benchMemcpy(JNIEnv *env, jobject thiz,
                                                                       jint n_threads) {
     UNUSED(thiz);
@@ -235,7 +234,7 @@ Java_org_fireamp_vox_WhisperLib_00024Companion_benchMemcpy(JNIEnv *env, jobject 
     jstring string = (*env)->NewStringUTF(env, bench_ggml_memcpy);
 }
 
-extern "C" JNIEXPORT jstring JNICALL
+JNIEXPORT jstring JNICALL
 Java_org_fireamp_vox_WhisperLib_00024Companion_benchGgmlMulMat(JNIEnv *env, jobject thiz,
                                                                           jint n_threads) {
     UNUSED(thiz);
