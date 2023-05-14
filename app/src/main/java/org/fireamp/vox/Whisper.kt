@@ -114,7 +114,7 @@ private class WhisperLib {
                 System.loadLibrary("whisper_vfpv4")
             } else if (loadV8fp16) {
                 Log.d(LOG_TAG, "Loading libwhisper_v8fp16_va.so")
-                System.loadLibrary("whisper_v8fp16_va")
+                System.loadLibrary("vox")
             } else {
                 Log.d(LOG_TAG, "Loading libwhisper.so")
                 System.loadLibrary("whisper")
